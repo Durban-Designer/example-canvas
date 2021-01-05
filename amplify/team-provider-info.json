@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-examplecanvas-dev-191415-authRole",
+      "UnauthRoleArn": "arn:aws:iam::272318702662:role/amplify-examplecanvas-dev-191415-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::272318702662:role/amplify-examplecanvas-dev-191415-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-examplecanvas-dev-191415-deployment",
+      "UnauthRoleName": "amplify-examplecanvas-dev-191415-unauthRole",
+      "StackName": "amplify-examplecanvas-dev-191415",
+      "StackId": "arn:aws:cloudformation:us-west-2:272318702662:stack/amplify-examplecanvas-dev-191415/b7010fb0-4efb-11eb-98f5-0aefa73cf101",
+      "AmplifyAppId": "d2srb4hwd7gny8"
+    }
+  }
+}
