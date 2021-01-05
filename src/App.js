@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+// packages
+import React, { Component, Suspense, lazy } from 'react';
+import { Router, navigate } from '@reach/router';
+// material UI components
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+// components
+import Loading from './components/Loading.js';
+// pages
+const Home = lazy(() => import('./pages/Home.js'));
+const NoMatch = lazy(() => import('./pages/404.js'));
+// misc
+const themeData = lazy(() => import('./assets/Theme.js'));
+const theme = createMuiTheme(themeData);
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  componentDidMount() {
+    // load the know path from local storage
+    var lastPath = localStorage.getItem('lastPath');
+
+    // if lastPath exists navigate to last know path
+    if (lastPath && lastPath !== '/') {
+      navigate(lastPath);
+    }
+  }
+
+  render() {
+    return (
+      <div className='App'>
+        <Suspense fallback={<Loading />}>
+          <MuiThemeProvider theme={theme}>
+            <Router>
+              <Home path='/' />
+              <NoMatch default />
+            </Router>
+          </MuiThemeProvider>
+        </Suspense>
+      </div>
+    );
+  }
 }
 
 export default App;
