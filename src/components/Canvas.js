@@ -112,6 +112,18 @@ class Canvas extends Component {
     }
   }
 
+  updateFromProps() {
+    // pull shapes and animations from props
+    this.setState({
+      shapes: this.props.shapes,
+      animations: this.props.animations
+    });
+    this.updateCanvas();
+    for (let i = 0; i < this.props.animations.length; i++) {
+      this.updateAnimations();
+    }
+  }
+
   drawRectangle(props) {
     const { ctx, x, y, width, height, fillBool } = props;
     if (fillBool) {

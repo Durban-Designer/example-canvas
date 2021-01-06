@@ -12,55 +12,62 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      animations: [
-        {
-          id: 'circle1',
-          type: 'move',
-          dimension: 'x',
-          loop: true,
-          startValue: 100,
-          endValue: 1000,
-          rate: 0.4
-        },
-        {
-          id: 'rectangle1',
-          type: 'scale',
-          dimension: 'width',
-          loop: true,
-          startValue: 10,
-          endValue: 920,
-          rate: 0.6
-        }
-      ],
-      shapes: [
-        {
-          type: 'circle',
-          x: 400,
-          y: 250,
-          r: 50,
-          sinAngle: 0,
-          eAngle: 2,
-          fillBool: true,
-          id: 'circle1'
-        },
-        {
-          type: 'rectangle',
-          x: 0,
-          y: 0,
-          width: 50,
-          height: 500,
-          fillBool: false,
-          id: 'rectangle1'
-        }
-      ]
+      data: [],
+      animations: [],
+      shapes: []
     }
+    this.updateAnimations = this.updateAnimations.bind(this);
   }
+
+  componentDidMount() {
+    this.ws = new WebSocket('ws://localhost:3001');
+    this.ws.onmessage = (event) => {
+      var tempShapes = [].concat(this.state.shapes);
+      var tempData = [].concat(this.state.data);
+      var eventData = JSON.parse(event.data);
+      tempShapes.push({
+        type: 'rectangle',
+        x: ((tempShapes.length * 50) + 5) + 50,
+        y: 500 - eventData.price,
+        width: 50,
+        height: eventData.price,
+        fillBool: true,
+        id: `rectangle${eventData.index}`
+      });
+      if (tempShapes.length === 21) {
+        tempShapes.shift();
+        tempShapes = this.updateAnimations(tempShapes);
+      }
+      tempData.push(eventData);
+      this.setState({
+        data: tempData,
+        shapes: tempShapes
+      });
+      this.refs.canvasReact.updateFromProps();
+    };
+  }
+
+  updateAnimations(tempShapes) {
+    for (let i = 0; i < tempShapes.length; i++) {
+      tempShapes[i] = {
+        type: tempShapes[i].type,
+        x: tempShapes[i].x - 50,
+        y: tempShapes[i].y,
+        width: tempShapes[i].width,
+        height: tempShapes[i].height,
+        fillBool: tempShapes[i].fillBool,
+        id: tempShapes[i].id
+      };
+    }
+    return tempShapes;
+  }
+
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.main}>
-        <Canvas className={classes.canvas} shapes={this.state.shapes} animations={this.state.animations} />
+        <Canvas ref="canvasReact" className={classes.canvas} shapes={this.state.shapes} animations={this.state.animations} />
       </div>
     );
   }
